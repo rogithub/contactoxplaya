@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Material Didáctico</title>
+    <style>
+        .pdf-item { margin: 10px 0; padding: 10px; border: 1px solid #ddd; }
+        .pdf-link { font-size: 16px; color: #0066cc; text-decoration: none; }
+        .pdf-size { color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>Material Didáctico - PDFs</h1>
+    <div id="pdf-list">Cargando PDFs...</div>
+
+    <script>
+        async function loadPDFs() {
+            try {
+                const response = await fetch('https://cntnt.xplaya.com/material-didactico');
+                const data = await response.json();
+                
+                const pdfList = document.getElementById('pdf-list');
+                pdfList.innerHTML = '';
+                
+                data.objects.forEach(pdf => {
+                    const pdfItem = document.createElement('div');
+                    pdfItem.className = 'pdf-item';
+                    
+                    const pdfUrl = `https://cntnt.xplaya.com/material-didactico/${encodeURIComponent(pdf.name)}`;
+                    const sizeMB = (pdf.size / (1024 * 1024)).toFixed(2);
+                    
+                    pdfItem.innerHTML = `
+                        <a class="pdf-link" href="${pdfUrl}" target="_blank">
+                            ${pdf.name}
+                        </a>
+                        <div class="pdf-size">${sizeMB} MB</div>
+                    `;
+                    
+                    pdfList.appendChild(pdfItem);
+                });
+            } catch (error) {
+                document.getElementById('pdf-list').innerHTML = 'Error cargando PDFs';
+            }
+        }
+        
+        loadPDFs();
+    </script>
+</body>
+</html>
